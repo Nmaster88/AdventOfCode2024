@@ -23,5 +23,21 @@ namespace Day1
 
             return listCountDistances.Sum();
         }
+
+        public int SimilarityScoreFromLists(List<int> listOne, List<int> listTwo)
+        {
+            List<int> similarityScores = new List<int>();
+
+            for (int i = 0; i < listOne.Count; i++)
+            {
+                var number = listOne[i];
+
+                int numberRepetitions = listTwo.Count(n => n == number);
+
+                similarityScores.Add(number * numberRepetitions);
+            }
+
+            return similarityScores.Sum();
+        }
     }
 }

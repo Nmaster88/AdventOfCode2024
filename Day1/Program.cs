@@ -23,6 +23,10 @@
 
             Console.WriteLine($"The calculatred distance from lists is {value}");
 
+            var valueTwo = historianHysteria.SimilarityScoreFromLists(listOne, listTwo);
+
+            Console.WriteLine($"The similarity score between the lists is {valueTwo}");
+
             Console.ReadKey();
         }
     }
