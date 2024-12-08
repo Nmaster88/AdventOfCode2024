@@ -51,7 +51,9 @@ namespace Day2Tests.Unit
         [Theory]
         [InlineData("1 2 7 8 9")]
         [InlineData("9 7 6 2 1")]
-        public void GivenTheFollowingUnSafeTolerantFaultInputs_ThenSafeRedNosed_ReturnsTrue(string value)
+        [InlineData("74 75 78 78 80 84")]
+        [InlineData("36 39 41 42 43 43 45 44")]
+        public void GivenTheFollowingUnSafeTolerantFaultInputs_ThenSafeRedNosed_ReturnsFalse(string value)
         {
             RedNosedReport redNosedReport = new RedNosedReport();
             bool result = redNosedReport.SafeRedNosedWithTolerateFault(value);
@@ -59,14 +61,14 @@ namespace Day2Tests.Unit
         }
 
         [Fact]
-        public void GivenTheFollowingTolerantFaultSafeInputs_ThenSafeRedNosedCount_ReturnsThree()
+        public void GivenTheFollowingTolerantFaultSafeInputs_ThenSafeRedNosedCount_ReturnsTwo()
         {
             string[] content = { "1 3 2 4 5", "8 6 4 4 1" };
 
             RedNosedReport redNosedReport = new RedNosedReport();
             int count = redNosedReport.SafeRedNosedWithTolerantFaultCount(content);
 
-            Assert.Equal(3, count);
+            Assert.Equal(2, count);
         }
     }
 }
