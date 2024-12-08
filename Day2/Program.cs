@@ -13,6 +13,10 @@
 
             Console.WriteLine($"the count of safeRedNosed is {count}");
 
+            int countWithTolerantFault = redNosedReport.SafeRedNosedWithTolerantFaultCount(contents);
+
+            Console.WriteLine($"the countWithTolerantFault of safeRedNosed is {countWithTolerantFault}");
+
             Console.ReadKey();
         }
     }

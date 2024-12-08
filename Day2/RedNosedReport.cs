@@ -89,6 +89,17 @@ namespace Day2
                     isIncreasing = true;
                 }
 
+                if (!tolerateFaultUsed && isIncreasing && currValue <= prevValue && ValidDistance(distance))
+                {
+                    tolerateFaultUsed = true;
+                    continue;
+                }
+                else if (!tolerateFaultUsed && !isIncreasing && currValue >= prevValue && ValidDistance(distance))
+                {
+                    tolerateFaultUsed = true;
+                    continue;
+                }
+
                 if (isIncreasing && currValue <= prevValue)
                 {
                     return false;
@@ -109,7 +120,20 @@ namespace Day2
             return true;
         }
 
-        private bool ValidDistance(int distance) => (distance >= _minDistance && distance <= _maxDistance);
+        private bool ValidDistance(int distance) => (distance >= 0 && distance <= _maxDistance);
         private bool InvalidDistance(int distance) => (distance < _minDistance || distance > _maxDistance);
+
+        public int SafeRedNosedWithTolerantFaultCount(string[] content)
+        {
+            int count = 0;
+            foreach (string s in content)
+            {
+                if (SafeRedNosedWithTolerateFault(s))
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
     }
 }

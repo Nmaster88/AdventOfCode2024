@@ -37,5 +37,36 @@ namespace Day2Tests.Unit
 
             Assert.Equal(3, count);
         }
+
+        [Theory]
+        [InlineData("1 3 2 4 5")]
+        [InlineData("8 6 4 4 1")]
+        public void GivenTheFollowingSafeTolerantFaultInputs_ThenSafeRedNosed_ReturnsTrue(string value)
+        {
+            RedNosedReport redNosedReport = new RedNosedReport();
+            bool result = redNosedReport.SafeRedNosedWithTolerateFault(value);
+            Assert.True(result);
+        }
+
+        [Theory]
+        [InlineData("1 2 7 8 9")]
+        [InlineData("9 7 6 2 1")]
+        public void GivenTheFollowingUnSafeTolerantFaultInputs_ThenSafeRedNosed_ReturnsTrue(string value)
+        {
+            RedNosedReport redNosedReport = new RedNosedReport();
+            bool result = redNosedReport.SafeRedNosedWithTolerateFault(value);
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void GivenTheFollowingTolerantFaultSafeInputs_ThenSafeRedNosedCount_ReturnsThree()
+        {
+            string[] content = { "1 3 2 4 5", "8 6 4 4 1" };
+
+            RedNosedReport redNosedReport = new RedNosedReport();
+            int count = redNosedReport.SafeRedNosedWithTolerantFaultCount(content);
+
+            Assert.Equal(3, count);
+        }
     }
 }
