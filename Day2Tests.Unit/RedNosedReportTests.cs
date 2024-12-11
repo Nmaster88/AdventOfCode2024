@@ -40,7 +40,9 @@ namespace Day2Tests.Unit
 
         [Theory]
         [InlineData("1 3 2 4 5")]
+        [InlineData("5 6 3 2")]
         [InlineData("8 6 4 4 1")]
+        [InlineData("1 4 2 4 5")]
         public void GivenTheFollowingSafeTolerantFaultInputs_ThenSafeRedNosed_ReturnsTrue(string value)
         {
             RedNosedReport redNosedReport = new RedNosedReport();
@@ -49,10 +51,11 @@ namespace Day2Tests.Unit
         }
 
         [Theory]
+        [InlineData("4 4 4")]
         [InlineData("1 2 7 8 9")]
         [InlineData("9 7 6 2 1")]
-        [InlineData("74 75 78 78 80 84")]
-        [InlineData("36 39 41 42 43 43 45 44")]
+        [InlineData("9 9 6 2 1")]
+        [InlineData("9 19 6 2 1")]
         public void GivenTheFollowingUnSafeTolerantFaultInputs_ThenSafeRedNosed_ReturnsFalse(string value)
         {
             RedNosedReport redNosedReport = new RedNosedReport();

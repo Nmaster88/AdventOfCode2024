@@ -15,14 +15,55 @@ namespace Day2
             }
             List<int> noseValues = value.Split(" ").Select(n => int.Parse(n!)).ToList();
 
-            bool isIncreasing = true;
-            int prevValue = noseValues[0];
+            return IsSafeReport(noseValues);
+        }
 
-            for (int i = 1; i < noseValues.Count; i++)
+        public int SafeRedNosedCount(string[] content)
+        {
+            int count = 0;
+            foreach (string s in content) 
             {
-                int currValue = noseValues[i];
+                if(SafeRedNosed(s)) 
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
 
-                if(i == 1 && currValue <= prevValue)
+        public bool SafeRedNosedWithTolerateFault(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+            List<int> noseValues = value.Split(" ").Select(n => int.Parse(n!)).ToList();
+
+            if(IsSafeReport(noseValues))
+            {
+                return true;
+            }
+
+            for (int i = 0; i < noseValues.Count; i++)
+            {
+                var reducedValues = noseValues.Where((_, index) => index != i).ToList();
+                if (IsSafeReport(reducedValues))
+                    return true;
+            }
+
+            return false;
+        }
+
+        private bool IsSafeReport(List<int> reportValues)
+        {
+            bool isIncreasing = true;
+            int prevValue = reportValues[0];
+
+            for (int i = 1; i < reportValues.Count; i++)
+            {
+                int currValue = reportValues[i];
+
+                if (i == 1 && currValue <= prevValue)
                 {
                     isIncreasing = false;
                 }
@@ -51,77 +92,10 @@ namespace Day2
             return true;
         }
 
-        public int SafeRedNosedCount(string[] content)
-        {
-            int count = 0;
-            foreach (string s in content) 
-            {
-                if(SafeRedNosed(s)) 
-                {
-                    count++;
-                }
-            }
-            return count;
-        }
+        private bool IsIncreasing(bool? isIncreasing) => isIncreasing.HasValue && isIncreasing.Value == true;
+        private bool IsDecreasing(bool? isIncreasing) => isIncreasing.HasValue && isIncreasing.Value == false;
 
-        public bool SafeRedNosedWithTolerateFault(string value)
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                return false;
-            }
-            List<int> noseValues = value.Split(" ").Select(n => int.Parse(n!)).ToList();
-
-            bool isIncreasing = true, tolerateFaultUsed = false;
-            int prevValue = noseValues[0];
-
-            for (int i = 1; i < noseValues.Count; i++)
-            {
-                int currValue = noseValues[i];
-                int distance = Math.Abs(currValue - prevValue);
-
-                if (i == 1 && currValue <= prevValue)
-                {
-                    isIncreasing = false;
-                }
-                else if (i == 1 && currValue >= prevValue)
-                {
-                    isIncreasing = true;
-                }
-
-                if (!tolerateFaultUsed && isIncreasing && currValue <= prevValue && ValidDistance(distance))
-                {
-                    tolerateFaultUsed = true;
-                    continue;
-                }
-                else if (!tolerateFaultUsed && !isIncreasing && currValue >= prevValue && ValidDistance(distance))
-                {
-                    tolerateFaultUsed = true;
-                    continue;
-                }
-
-                if (isIncreasing && currValue <= prevValue)
-                {
-                    return false;
-                }
-                else if (!isIncreasing && currValue >= prevValue)
-                {
-                    return false;
-                }
-
-                if (InvalidDistance(distance))
-                {
-                    return false;
-                }
-
-                prevValue = currValue;
-            }
-
-            return true;
-        }
-
-        private bool ValidDistance(int distance) => (distance >= 0 && distance <= _maxDistance);
-        private bool InvalidDistance(int distance) => (distance < _minDistance || distance > _maxDistance);
+        private bool ValidDistance(int distance) => (distance >= _minDistance && distance <= _maxDistance);
 
         public int SafeRedNosedWithTolerantFaultCount(string[] content)
         {
