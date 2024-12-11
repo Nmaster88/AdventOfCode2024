@@ -92,11 +92,6 @@ namespace Day2
             return true;
         }
 
-        private bool IsIncreasing(bool? isIncreasing) => isIncreasing.HasValue && isIncreasing.Value == true;
-        private bool IsDecreasing(bool? isIncreasing) => isIncreasing.HasValue && isIncreasing.Value == false;
-
-        private bool ValidDistance(int distance) => (distance >= _minDistance && distance <= _maxDistance);
-
         public int SafeRedNosedWithTolerantFaultCount(string[] content)
         {
             int count = 0;
