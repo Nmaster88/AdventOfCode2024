@@ -18,6 +18,14 @@
 
             Console.WriteLine($"the sumOfMul of MulItOverAndSum is {sumOfMul}");
 
+            int sumOfMulWithControl = 0;
+            foreach (string line in contents)
+            {
+                sumOfMulWithControl += mulItOverOperations.MulItOverWithControlAndSum(line);
+            }
+
+            Console.WriteLine($"the sumOfMul of MulItOverWithControlAndSum is {sumOfMulWithControl}");
+
             Console.ReadKey();
         }
     }
