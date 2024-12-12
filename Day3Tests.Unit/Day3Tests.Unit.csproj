@@ -22,4 +22,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Day3\Day3.csproj" />
+  </ItemGroup>
+
 </Project>
