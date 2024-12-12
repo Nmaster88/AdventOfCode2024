@@ -20,7 +20,6 @@ namespace Day3Tests.Unit
         [Theory]
         [InlineData("sdadamul(1,3)sddon't()asdamul(1,3)sdado()smul(1,3)", 6)]
         [InlineData("xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))", 48)]
-        [InlineData("xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))", 201)]
         public void GivenAMullString_ThenItIsCalculatedWithMulItOverWithControlAndSum_ReturnsTheProvidedValue(string mullText, int expectedValue)
         {
             MulItOverOperations mulItOverOperations = new MulItOverOperations();

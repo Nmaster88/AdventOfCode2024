@@ -20,82 +20,32 @@ namespace Day3
             return sumOfMul;
         }
 
-        //public int MulItOverWithControlAndSum(string mullTextWithControl)
-        //{
-        //    var mulRegex = new Regex(@"mul\((\d+),(\d+)\)");
-        //    var controlRegex = new Regex(@"do\(\)|don't\(\)");
-
-        //    bool isEnabledMul = true;
-
-        //    var tokens = Regex.Split(mullTextWithControl, @"(?=mul\(|do\(\)|don't\(\))");
-
-        //    int sumOfMul = 0;
-
-        //    int sumOfMulConditional = 0;
-
-        //    foreach (var token in tokens)
-        //    {
-        //        if (controlRegex.IsMatch(token) && token.Contains("do()"))
-        //        {
-        //            isEnabledMul = true;
-        //            continue;
-        //        }
-        //        else if (controlRegex.IsMatch(token) && token.Contains("don't()"))
-        //        {
-        //            isEnabledMul = false;
-
-        //            if (sumOfMulConditional > 0)
-        //            {
-        //                sumOfMul += sumOfMulConditional;
-        //                sumOfMulConditional = 0;
-        //            }
-
-        //            continue;
-        //        }
-
-        //        if (isEnabledMul && mulRegex.IsMatch(token))
-        //        {
-        //            sumOfMul += DigitCalculation(token);
-        //        }
-        //        else if (!isEnabledMul && mulRegex.IsMatch(token))
-        //        {
-        //            sumOfMulConditional += DigitCalculation(token);
-        //        }
-        //    }
-
-        //    return sumOfMul;
-        //}
-
         public int MulItOverWithControlAndSum(string mullTextWithControl)
         {
             var mulRegex = new Regex(@"mul\((\d+),(\d+)\)");
             var controlRegex = new Regex(@"do\(\)|don't\(\)");
 
-            bool isDoState = false;
-            bool isDontState = false;
+            bool isEnabledMul = true;
 
             var tokens = Regex.Split(mullTextWithControl, @"(?=mul\(|do\(\)|don't\(\))");
 
             int sumOfMul = 0;
 
-            MulControlStates state = MulControlStates.None;
 
             foreach (var token in tokens)
             {
-                if (controlRegex.IsMatch(token) && token.Contains("do()") && !isDoState)
+                if (controlRegex.IsMatch(token) && token.Contains("do()"))
                 {
-                    isDoState = true;
-                    state = MulControlStateTransition(isDoState, isDontState);
+                    isEnabledMul = true;
                     continue;
                 }
-                else if (controlRegex.IsMatch(token) && token.Contains("don't()") && !isDontState)
+                else if (controlRegex.IsMatch(token) && token.Contains("don't()"))
                 {
-                    isDontState = true;
-                    state = MulControlStateTransition(isDoState, isDontState);
+                    isEnabledMul = false;
                     continue;
                 }
 
-                if ((state == MulControlStates.None || state == MulControlStates.DoFirst || state == MulControlStates.DoSecond) && mulRegex.IsMatch(token))
+                if (isEnabledMul && mulRegex.IsMatch(token))
                 {
                     sumOfMul += DigitCalculation(token);
                 }
