@@ -42,10 +42,8 @@ namespace Day4Tests.Unit
                 for (int horizontalPos = 0; horizontalPos < line.Length; horizontalPos++)
                 {
                     char letter = line[horizontalPos];
-                    Console.WriteLine(letter);
                 }
             }
-            Console.ReadLine();
             return 18;
         }
     }
