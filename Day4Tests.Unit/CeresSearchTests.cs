@@ -1,4 +1,5 @@
 
+
 namespace Day4Tests.Unit
 {
     public class CeresSearchTests
@@ -49,6 +50,7 @@ namespace Day4Tests.Unit
             int wordLenght = word.Length;
             int wordHorizontalLength = content!.GetLength(0);
             int wordVerticalLength = content!.GetLength(1);
+            int occurrencesFind = 0;
 
             coordMatrix = new char[wordHorizontalLength, wordVerticalLength];
             
@@ -61,6 +63,7 @@ namespace Day4Tests.Unit
                     {
                         bool canGoUp = false, canGoDown = false, canGoLeft = false, canGoRight = false;
 
+                        //Check which directions I can go to check if the word exists
                         if(verticalPos > wordLenght-1)
                         {
                             canGoUp = true;
@@ -77,15 +80,52 @@ namespace Day4Tests.Unit
                         {
                             canGoRight = true;
                         }
+
+                        //Check now if the word exists
+                        Coordinates firstLetterCoordinates = new Coordinates(horizontalPos, verticalPos);
+
+                        if(canGoUp)
+                        {
+                            bool isLetterMatch = true;
+                            int position = 0;
+                            int horizontalPosFind = horizontalPos;
+                            int verticalPosFind = verticalPos;
+                            string wordToMatch = string.Empty;
+                            wordToMatch.Append(wordFirstLetter);
+
+                            while (isLetterMatch)
+                            {
+                                verticalPos--;
+                                position++;
+                                char letterFound = FindLetterOnCoordinates(horizontalPosFind, verticalPosFind);
+                                if(letterFound != word.ElementAt(position))
+                                {
+                                    break; //get out of while no point in going
+                                }
+                                wordToMatch.Append(letterFound);
+
+                                if (wordToMatch == word)
+                                {
+                                    occurrencesFind++;
+                                    break;
+                                }
+                            }
+                        }
+
+                        //TODO: do the same for the other directions
+
                     }
                 }
             }
             return 18;
         }
 
-        //private int WordFindOccurrences(int horizontalPos, int verticalPos, string word)
-        //{
-        //    content[horizontalPos][verticalPos];
-        //}
+        private char FindLetterOnCoordinates(int v1, int v2)
+        {
+            char letterFound = content[v1,v2];
+            return letterFound;
+        }
+
+        private record Coordinates(int X, int Y);
     }
 }
