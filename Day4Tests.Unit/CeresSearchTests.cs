@@ -82,32 +82,28 @@ namespace Day4Tests.Unit
 
         private List<(int, int)> BuildDirectionsMultiplier(Coordinates currentCoordinates, int wordLength, int contentHorizontalLength, int contentVerticalLength)
         {
-            List<(int, int)> directionsMultiplier = new List<(int, int)>();
             int wordLastIndex = wordLength - 1;
 
-            if (currentCoordinates.Y > wordLastIndex)
+            return AllDirections.Where(direction =>
             {
-                directionsMultiplier.Add((0, 1));
-            }
-            if (currentCoordinates.Y > wordLastIndex && currentCoordinates.X > wordLastIndex)
-            {
-                directionsMultiplier.Add((-1, 1));
-            }
-            if (currentCoordinates.X > wordLastIndex)
-            {
-                directionsMultiplier.Add((-1, 0));
-            }
-            if (contentVerticalLength - currentCoordinates.Y > wordLastIndex)
-            {
-                directionsMultiplier.Add((0, -1));
-            }
-            if (contentHorizontalLength - currentCoordinates.X > wordLastIndex)
-            {
-                directionsMultiplier.Add((0, 0));
-            }
+                int endX = currentCoordinates.X + direction.dx * wordLastIndex;
+                int endY = currentCoordinates.Y + direction.dy * wordLastIndex;
 
-            throw new NotImplementedException();    
+                return endX >= 0 && endX < contentHorizontalLength && endY >= 0 && endY < contentVerticalLength;
+            }).ToList();
         }
+
+        private static readonly (int dx, int dy)[] AllDirections =
+        {
+            (0, 1),   // Up
+            (1, 1),   // Up-Right
+            (1, 0),   // Right
+            (1, -1),  // Down-Right
+            (0, -1),  // Down
+            (-1, -1), // Down-Left
+            (-1, 0),  // Left
+            (-1, 1)   // Up-Left
+        };
 
         private AllowedDirections CheckAllowedDirections(int wordLenght, int wordHorizontalLength, int wordVerticalLength, int verticalPos, int horizontalPos)
         {
