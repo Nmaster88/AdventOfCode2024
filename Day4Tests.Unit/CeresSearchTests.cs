@@ -67,12 +67,12 @@ namespace Day4Tests.Unit
                     char letter = content[horizontalPos,horizontalPos];
                     if(letter == wordFirstLetter)
                     {
-                        AllowedDirections allowedDirections = CheckAllowedDirections(wordLenght, contentHorizontalLength, contentVerticalLength, verticalPos, horizontalPos);
+                        //AllowedDirections allowedDirections = CheckAllowedDirections(wordLenght, contentHorizontalLength, contentVerticalLength, verticalPos, horizontalPos);
 
                         //Check now if the word exists
                         Coordinates firstLetterCoordinates = new Coordinates(horizontalPos, verticalPos);
 
-                        WordFind(firstLetterCoordinates, allowedDirections);
+                        WordFind(firstLetterCoordinates, directionsMultiplier);
                         //TODO: do the same for the other directions, what is the best way to do it?
                     }
                 }
@@ -105,34 +105,7 @@ namespace Day4Tests.Unit
             (-1, 1)   // Up-Left
         };
 
-        private AllowedDirections CheckAllowedDirections(int wordLenght, int wordHorizontalLength, int wordVerticalLength, int verticalPos, int horizontalPos)
-        {
-            bool canGoUp = false, canGoDown = false, canGoLeft = false, canGoRight = false;
-
-            //Check which directions I can go to check if the word exists
-            if (verticalPos > wordLenght - 1)
-            {
-                canGoUp = true;
-            }
-            if (horizontalPos > wordLenght - 1)
-            {
-                canGoLeft = true;
-            }
-            if (wordVerticalLength - verticalPos > wordLenght - 1)
-            {
-                canGoDown = true;
-            }
-            if (wordHorizontalLength - horizontalPos > wordLenght - 1)
-            {
-                canGoRight = true;
-            }
-
-            AllowedDirections allowedDirections = new AllowedDirections(canGoUp, canGoRight, canGoDown, canGoLeft);
-
-            return allowedDirections;
-        }
-
-        private void WordFind(Coordinates firstLetterCoordinates, AllowedDirections allowedDirections)
+        private void WordFind(Coordinates firstLetterCoordinates, List<(int, int)> directionsMultiplier)
         {
             char wordFirstLetter = wordToFind!.First();
             bool isLetterMatch = true;
