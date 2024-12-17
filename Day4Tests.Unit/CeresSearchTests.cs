@@ -1,4 +1,6 @@
 
+using System.Text;
+
 namespace Day4Tests.Unit
 {
     public class CeresSearchTests
@@ -67,13 +69,9 @@ namespace Day4Tests.Unit
                     char letter = content[horizontalPos,horizontalPos];
                     if(letter == wordFirstLetter)
                     {
-                        //AllowedDirections allowedDirections = CheckAllowedDirections(wordLenght, contentHorizontalLength, contentVerticalLength, verticalPos, horizontalPos);
+                        Coordinates firstLetterFromWordCoordinates = new Coordinates(horizontalPos, verticalPos);
 
-                        //Check now if the word exists
-                        Coordinates firstLetterCoordinates = new Coordinates(horizontalPos, verticalPos);
-
-                        WordFind(firstLetterCoordinates, directionsMultiplier);
-                        //TODO: do the same for the other directions, what is the best way to do it?
+                        WordFind(firstLetterFromWordCoordinates, directionsMultiplier);
                     }
                 }
             }
@@ -108,28 +106,40 @@ namespace Day4Tests.Unit
         private void WordFind(Coordinates firstLetterCoordinates, List<(int, int)> directionsMultiplier)
         {
             char wordFirstLetter = wordToFind!.First();
-            bool isLetterMatch = true;
-            int position = 0;
-            int horizontalPosFind = firstLetterCoordinates.X;
-            int verticalPosFind = firstLetterCoordinates.Y;
-            string wordToMatch = string.Empty;
+            StringBuilder wordToMatch = new StringBuilder();
             wordToMatch.Append(wordFirstLetter);
+            int contentHorizontalLength = content!.GetLength(0);
+            int contentVerticalLength = content!.GetLength(1);
 
-            while (isLetterMatch)
+            foreach (var directionMultiplier in directionsMultiplier) 
             {
-                verticalPosFind--;
-                position++;
-                char letterFound = FindLetterOnCoordinates(horizontalPosFind, verticalPosFind);
-                if (letterFound != wordToFind.ElementAt(position))
-                {
-                    break;
-                }
-                wordToMatch.Append(letterFound);
+                bool isLetterMatch = true;
+                int horizontalPosFind = firstLetterCoordinates.X;
+                int verticalPosFind = firstLetterCoordinates.Y;
 
-                if (wordToMatch == wordToFind)
+                while (isLetterMatch)
                 {
-                    occurrencesFind++;
-                    break;
+                    horizontalPosFind = horizontalPosFind + directionMultiplier.Item1;
+                    verticalPosFind = verticalPosFind + directionMultiplier.Item2;
+                    if(horizontalPosFind < 0 && horizontalPosFind >= contentHorizontalLength && verticalPosFind < 0 && verticalPosFind >= contentVerticalLength)
+                    {
+                        break;
+                    }
+
+                    int position = 0;
+                    position++;
+                    char letterFound = FindLetterOnCoordinates(horizontalPosFind, verticalPosFind);
+                    if (letterFound != wordToFind.ElementAt(position))
+                    {
+                        break;
+                    }
+                    wordToMatch.Append(letterFound);
+
+                    if (wordToMatch.ToString() == wordToFind)
+                    {
+                        occurrencesFind++;
+                        break;
+                    }
                 }
             }
         }
