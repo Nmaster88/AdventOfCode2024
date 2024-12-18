@@ -1,4 +1,5 @@
 
+using Day4;
 using System.Text;
 
 namespace Day4Tests.Unit
@@ -20,6 +21,8 @@ namespace Day4Tests.Unit
                 "MAMMMXMMMM",
                 "MXMXAXMASX"
                 ];
+
+            CeresSearch ceresSearch = new CeresSearch();
 
             content = new char[contentInput.Length, contentInput[0].Length];
 
@@ -56,8 +59,9 @@ namespace Day4Tests.Unit
             int wordLenght = wordToFind.Length;
             int contentHorizontalLength = content!.GetLength(0);
             int contentVerticalLength = content!.GetLength(1);
+            int occurrencesCount = 0;
 
-            coordMatrix = new char[contentHorizontalLength, contentVerticalLength];
+            //coordMatrix = new char[contentHorizontalLength, contentVerticalLength];
             
             for(int verticalPos = 0; verticalPos < contentVerticalLength; verticalPos++)
             {
@@ -66,16 +70,14 @@ namespace Day4Tests.Unit
                     Coordinates currentCoordinates = new Coordinates(horizontalPos, verticalPos);
                     List<(int, int)> directionsMultiplier = BuildDirectionsMultiplier(currentCoordinates, wordLenght, contentHorizontalLength, contentVerticalLength);
 
-                    char letter = content[horizontalPos,horizontalPos];
+                    char letter = content[horizontalPos, verticalPos];
                     if(letter == wordFirstLetter)
                     {
-                        Coordinates firstLetterFromWordCoordinates = new Coordinates(horizontalPos, verticalPos);
-
-                        WordFind(firstLetterFromWordCoordinates, directionsMultiplier);
+                        occurrencesCount += WordFind(currentCoordinates, directionsMultiplier);
                     }
                 }
             }
-            return 18;
+            return occurrencesCount;
         }
 
         private List<(int, int)> BuildDirectionsMultiplier(Coordinates currentCoordinates, int wordLength, int contentHorizontalLength, int contentVerticalLength)
@@ -103,45 +105,57 @@ namespace Day4Tests.Unit
             (-1, 1)   // Up-Left
         };
 
-        private void WordFind(Coordinates firstLetterCoordinates, List<(int, int)> directionsMultiplier)
+        private int WordFind(Coordinates firstLetterCoordinates, List<(int, int)> directionsMultiplier)
         {
             char wordFirstLetter = wordToFind!.First();
             StringBuilder wordToMatch = new StringBuilder();
             wordToMatch.Append(wordFirstLetter);
             int contentHorizontalLength = content!.GetLength(0);
             int contentVerticalLength = content!.GetLength(1);
+            int occurrencesCount = 0;
 
             foreach (var directionMultiplier in directionsMultiplier) 
             {
                 bool isLetterMatch = true;
                 int horizontalPosFind = firstLetterCoordinates.X;
                 int verticalPosFind = firstLetterCoordinates.Y;
+                int position = 0;
 
                 while (isLetterMatch)
                 {
                     horizontalPosFind = horizontalPosFind + directionMultiplier.Item1;
                     verticalPosFind = verticalPosFind + directionMultiplier.Item2;
-                    if(horizontalPosFind < 0 && horizontalPosFind >= contentHorizontalLength && verticalPosFind < 0 && verticalPosFind >= contentVerticalLength)
-                    {
-                        break;
-                    }
-
-                    int position = 0;
                     position++;
+                    if ((horizontalPosFind < 0 && horizontalPosFind > contentHorizontalLength-1) || 
+                        (verticalPosFind < 0 && verticalPosFind > contentVerticalLength-1) || 
+                        position == wordToFind.Length-1)
+                    {
+                        isLetterMatch = false;
+                        continue;
+                    }
                     char letterFound = FindLetterOnCoordinates(horizontalPosFind, verticalPosFind);
                     if (letterFound != wordToFind.ElementAt(position))
                     {
-                        break;
+                        isLetterMatch = false;
+                        continue;
                     }
                     wordToMatch.Append(letterFound);
+                    string wordToMatchBuilt = wordToMatch.ToString();
 
-                    if (wordToMatch.ToString() == wordToFind)
+                    if(wordToMatchBuilt.Length == 4 || wordToMatchBuilt == "XMAS")
                     {
-                        occurrencesFind++;
-                        break;
+                        var test = "";
+                    }
+
+                    if (wordToMatchBuilt.Length == wordToFind.Length && wordToMatchBuilt == wordToFind)
+                    {
+                        occurrencesCount++;
+                        continue;
                     }
                 }
             }
+
+            return occurrencesCount;
         }
 
         private char FindLetterOnCoordinates(int v1, int v2)
