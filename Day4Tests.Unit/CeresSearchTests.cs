@@ -128,7 +128,7 @@ namespace Day4Tests.Unit
                     position++;
                     if ((horizontalPosFind < 0 && horizontalPosFind > contentHorizontalLength-1) || 
                         (verticalPosFind < 0 && verticalPosFind > contentVerticalLength-1) || 
-                        position == wordToFind.Length-1)
+                        position == wordToFind.Length)
                     {
                         isLetterMatch = false;
                         continue;
