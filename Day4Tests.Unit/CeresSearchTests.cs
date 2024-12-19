@@ -108,8 +108,7 @@ namespace Day4Tests.Unit
         private int WordFind(Coordinates firstLetterCoordinates, List<(int, int)> directionsMultiplier)
         {
             char wordFirstLetter = wordToFind!.First();
-            StringBuilder wordToMatch = new StringBuilder();
-            wordToMatch.Append(wordFirstLetter);
+
             int contentHorizontalLength = content!.GetLength(0);
             int contentVerticalLength = content!.GetLength(1);
             int occurrencesCount = 0;
@@ -120,14 +119,16 @@ namespace Day4Tests.Unit
                 int horizontalPosFind = firstLetterCoordinates.X;
                 int verticalPosFind = firstLetterCoordinates.Y;
                 int position = 0;
+                StringBuilder wordToMatch = new StringBuilder();
+                wordToMatch.Append(wordFirstLetter);
 
                 while (isLetterMatch)
                 {
                     horizontalPosFind = horizontalPosFind + directionMultiplier.Item1;
                     verticalPosFind = verticalPosFind + directionMultiplier.Item2;
                     position++;
-                    if ((horizontalPosFind < 0 && horizontalPosFind > contentHorizontalLength-1) || 
-                        (verticalPosFind < 0 && verticalPosFind > contentVerticalLength-1) || 
+                    if ((horizontalPosFind < 0 || horizontalPosFind == contentHorizontalLength) || 
+                        (verticalPosFind   < 0 || verticalPosFind   == contentVerticalLength) || 
                         position == wordToFind.Length)
                     {
                         isLetterMatch = false;
@@ -147,7 +148,7 @@ namespace Day4Tests.Unit
                         var test = "";
                     }
 
-                    if (wordToMatchBuilt.Length == wordToFind.Length && wordToMatchBuilt == wordToFind)
+                    if (wordToMatchBuilt == wordToFind)
                     {
                         occurrencesCount++;
                         continue;
