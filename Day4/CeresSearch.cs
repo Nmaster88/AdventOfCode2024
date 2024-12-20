@@ -117,5 +117,19 @@ namespace Day4
             char letterFound = content[letterCoordinates.X, letterCoordinates.Y];
             return letterFound;
         }
+
+        public int FindXMASOcurrencesOnContent(char[,] content, object wordToFind)
+        {
+            if (content?.Length == 0)
+            {
+                return 0;
+            }
+
+            int contentHorizontalLength = content!.GetLength(0);
+            int contentVerticalLength = content!.GetLength(1);
+            int occurrencesCount = 0;
+
+            throw new NotImplementedException();
+        }
     }
 }
