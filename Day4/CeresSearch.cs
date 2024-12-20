@@ -129,6 +129,18 @@ namespace Day4
             int contentVerticalLength = content!.GetLength(1);
             int occurrencesCount = 0;
 
+            for (int verticalPos = 0; verticalPos < contentVerticalLength; verticalPos++)
+            {
+                for (int horizontalPos = 0; horizontalPos < contentHorizontalLength; horizontalPos++)
+                {
+                    Coordinates currentCoordinates = new Coordinates(horizontalPos, verticalPos);
+                    List<(int, int)> directionsMultiplier = BuildDirectionsMultiplier(currentCoordinates, wordLenght, contentHorizontalLength, contentVerticalLength);
+
+                    char letter = content[horizontalPos, verticalPos];
+                }
+            }
+            return occurrencesCount;
+
             throw new NotImplementedException();
         }
     }
