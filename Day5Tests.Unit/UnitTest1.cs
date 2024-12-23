@@ -58,6 +58,15 @@ namespace Day5Tests.Unit
 
         private int CheckSum(List<string[]> pageOrderingRules, List<string[]> pageNumbersForUpdate)
         {
+            int numbersForUpdateLength = pageNumbersForUpdate.Count;
+
+            foreach (string[] numberForUpdate in pageNumbersForUpdate) 
+            { 
+                for (int i = 0; i < numbersForUpdateLength; i++) 
+                {
+                    
+                }
+            }
             throw new NotImplementedException();
         }
     }
