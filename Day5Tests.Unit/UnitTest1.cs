@@ -69,5 +69,10 @@ namespace Day5Tests.Unit
             }
             throw new NotImplementedException();
         }
+
+        private bool CheckRules(string[] numberForUpdate, List<string[]> pageOrderingRules)
+        {
+            return true;
+        }
     }
 }
