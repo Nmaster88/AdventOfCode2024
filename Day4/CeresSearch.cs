@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Day4
 {
@@ -118,7 +120,23 @@ namespace Day4
             return letterFound;
         }
 
-        public int FindXMASOcurrencesOnContent(char[,] content, object wordToFind)
+        private class WordProperties
+        {
+            public int WordLength { get; private set; }
+            public int MiddleIndex { get; private set; }
+            public char MiddleLetter { get; private set; }
+            public int WordLengthFromMiddle { get; private set; }
+
+            public WordProperties(string wordToFind)
+            {
+                WordLength = wordToFind.Length;
+                MiddleIndex = WordLength / 2;
+                MiddleLetter = wordToFind[MiddleIndex];
+                WordLengthFromMiddle = WordLength - MiddleIndex;
+            }
+        }
+
+        public int XWordOcurrencesOnContent(char[,] content, string wordToFind)
         {
             if (content?.Length == 0)
             {
@@ -129,17 +147,64 @@ namespace Day4
             int contentVerticalLength = content!.GetLength(1);
             int occurrencesCount = 0;
 
+            var wordProperties = new WordProperties(wordToFind);
+
+            if (wordProperties.WordLength % 2 == 0)
+            {
+                throw new ArgumentException(nameof(wordToFind));
+            }
+
             for (int verticalPos = 0; verticalPos < contentVerticalLength; verticalPos++)
             {
                 for (int horizontalPos = 0; horizontalPos < contentHorizontalLength; horizontalPos++)
                 {
                     Coordinates currentCoordinates = new Coordinates(horizontalPos, verticalPos);
-                    List<(int, int)> directionsMultiplier = BuildDirectionsMultiplier(currentCoordinates, wordLenght, contentHorizontalLength, contentVerticalLength);
-
+                    List<(int, int)> directionsMultiplier = BuildDirectionsMultiplier(currentCoordinates, wordProperties.WordLengthFromMiddle, contentHorizontalLength, contentVerticalLength);
+                    if(directionsMultiplier.Count < 8)
+                    {
+                        continue;
+                    }
                     char letter = content[horizontalPos, verticalPos];
+                    if(letter != wordProperties.MiddleLetter)
+                    {
+                        continue;
+                    }
+
                 }
             }
             return occurrencesCount;
+        }
+
+        private int GetXWordOccurrences(char[,] content, Coordinates currentCoordinates, List<(int, int)> directionsMultiplier, string wordToFind) 
+        {
+            var wordProperties = new WordProperties(wordToFind);
+
+            var letter = content[currentCoordinates.X, currentCoordinates.Y];
+            if(letter != wordProperties.MiddleLetter)
+            { 
+                return 0;
+            }
+
+
+
+            StringBuilder stringBuilderOne = new StringBuilder();
+            stringBuilderOne.Append(wordProperties.MiddleLetter);
+            
+            
+            StringBuilder stringBuilderTwo = new StringBuilder();
+
+            
+            
+
+            //foreach (var direction in directionsMultiplier) 
+            //{
+            //    if (direction.Item1 == 0 || direction.Item2 == 0)
+            //    {
+            //        continue;
+            //    }
+
+
+            //}
 
             throw new NotImplementedException();
         }

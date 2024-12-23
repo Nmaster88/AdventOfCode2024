@@ -38,6 +38,7 @@ namespace Day4Tests.Unit
             Assert.Equal(18, number);
         }
 
+        [Fact]
         public void GivenTheFollowingTextLines_WhenTheX_MASWordsAreFind_ThenItReturnsTheRightNumber()
         {
             string[] contentInput = [
@@ -65,7 +66,9 @@ namespace Day4Tests.Unit
                 }
             }
 
-            int number = ceresSearch.FindXMASOcurrencesOnContent(content, wordToFind);
+            string wordToFind = "mas";
+
+            int number = ceresSearch.XWordOcurrencesOnContent(content, wordToFind);
 
             Assert.Equal(9, number);
         }
