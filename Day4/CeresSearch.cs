@@ -170,43 +170,50 @@ namespace Day4
                         continue;
                     }
 
+                    occurrencesCount = GetXWordOccurrences(content, currentCoordinates, wordToFind) ? occurrencesCount + 1 : occurrencesCount;
                 }
             }
             return occurrencesCount;
         }
 
-        private int GetXWordOccurrences(char[,] content, Coordinates currentCoordinates, List<(int, int)> directionsMultiplier, string wordToFind) 
+        //Warning: For now let's just consider that the word is of a maximum length of 3. the method needs to be changed to allow different lengths
+        private bool GetXWordOccurrences(char[,] content, Coordinates currentCoordinates, string wordToFind) 
         {
             var wordProperties = new WordProperties(wordToFind);
 
             var letter = content[currentCoordinates.X, currentCoordinates.Y];
-            if(letter != wordProperties.MiddleLetter)
+            if(letter != wordProperties.MiddleLetter && wordProperties.WordLength != 3)
             { 
-                return 0;
+                return false;
             }
 
-
+            Coordinates coordinatesToLook = null;
 
             StringBuilder stringBuilderOne = new StringBuilder();
+            coordinatesToLook = new Coordinates(currentCoordinates.X - 1, currentCoordinates.Y + 1);
+            stringBuilderOne.Append(content[coordinatesToLook.X, coordinatesToLook.Y]);
             stringBuilderOne.Append(wordProperties.MiddleLetter);
-            
-            
+            coordinatesToLook = new Coordinates(currentCoordinates.X + 1, currentCoordinates.Y - 1);
+            stringBuilderOne.Append(content[coordinatesToLook.X, coordinatesToLook.Y]);
+            string wordFirstAxis = stringBuilderOne.ToString();
+
             StringBuilder stringBuilderTwo = new StringBuilder();
+            coordinatesToLook = new Coordinates(currentCoordinates.X + 1, currentCoordinates.Y + 1);
+            stringBuilderTwo.Append(content[coordinatesToLook.X, coordinatesToLook.Y]);
+            stringBuilderTwo.Append(wordProperties.MiddleLetter);
+            coordinatesToLook = new Coordinates(currentCoordinates.X - 1, currentCoordinates.Y - 1);
+            stringBuilderTwo.Append(content[coordinatesToLook.X, coordinatesToLook.Y]);
+            string wordSecondAxis = stringBuilderTwo.ToString();
 
-            
-            
+            if(string.IsNullOrWhiteSpace(wordFirstAxis) || string.IsNullOrWhiteSpace(wordSecondAxis) ||
+               (wordFirstAxis != wordToFind && wordFirstAxis!.Reverse() != wordToFind) ||
+               (wordSecondAxis != wordToFind && wordSecondAxis!.Reverse() != wordToFind)
+            )
+            {
+                return false;
+            }
 
-            //foreach (var direction in directionsMultiplier) 
-            //{
-            //    if (direction.Item1 == 0 || direction.Item2 == 0)
-            //    {
-            //        continue;
-            //    }
-
-
-            //}
-
-            throw new NotImplementedException();
+            return true;
         }
     }
 }
