@@ -49,11 +49,16 @@ namespace Day5Tests.Unit
                 pageNumbersForUpdate.Add(line.Split(','));
             }
 
-            int calculateSum = 0;
+            int calculateSum = CheckSum(pageOrderingRules, pageNumbersForUpdate);
 
             var result = 143;
 
             Assert.Equal(143, result);
+        }
+
+        private int CheckSum(List<string[]> pageOrderingRules, List<string[]> pageNumbersForUpdate)
+        {
+            throw new NotImplementedException();
         }
     }
 }
