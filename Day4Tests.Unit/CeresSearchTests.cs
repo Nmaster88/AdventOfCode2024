@@ -6,7 +6,7 @@ namespace Day4Tests.Unit
     public class CeresSearchTests
     {
         [Fact]
-        public void GivenTheFollowingTextLines_WhenTheXMASWordsAreFind_ThenItReturnsTheRightNumber()
+        public void FindWordOccurrencesOnContent_ReturnsExpectedCount_ForGivenInput()
         {
             string[] contentInput = [
                 "MMMSXXMASM",
@@ -39,7 +39,7 @@ namespace Day4Tests.Unit
         }
 
         [Fact]
-        public void GivenTheFollowingTextLines_WhenTheX_MASWordsAreFind_ThenItReturnsTheRightNumber()
+        public void XWordOcurrencesOnContent_ReturnsExpectedCount_ForGivenInput()
         {
             string[] contentInput = [
                 ".M.S......",
