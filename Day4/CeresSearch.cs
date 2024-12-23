@@ -196,6 +196,7 @@ namespace Day4
             coordinatesToLook = new Coordinates(currentCoordinates.X + 1, currentCoordinates.Y - 1);
             stringBuilderOne.Append(content[coordinatesToLook.X, coordinatesToLook.Y]);
             string wordFirstAxis = stringBuilderOne.ToString();
+            string wordFirstAxisReversed = string.Concat(wordFirstAxis!.Reverse());
 
             StringBuilder stringBuilderTwo = new StringBuilder();
             coordinatesToLook = new Coordinates(currentCoordinates.X + 1, currentCoordinates.Y + 1);
@@ -204,10 +205,11 @@ namespace Day4
             coordinatesToLook = new Coordinates(currentCoordinates.X - 1, currentCoordinates.Y - 1);
             stringBuilderTwo.Append(content[coordinatesToLook.X, coordinatesToLook.Y]);
             string wordSecondAxis = stringBuilderTwo.ToString();
+            string wordSecondAxisReversed = string.Concat(wordSecondAxis!.Reverse());
 
-            if(string.IsNullOrWhiteSpace(wordFirstAxis) || string.IsNullOrWhiteSpace(wordSecondAxis) ||
-               (wordFirstAxis != wordToFind && wordFirstAxis!.Reverse() != wordToFind) ||
-               (wordSecondAxis != wordToFind && wordSecondAxis!.Reverse() != wordToFind)
+            if (string.IsNullOrWhiteSpace(wordFirstAxis) || string.IsNullOrWhiteSpace(wordSecondAxis) ||
+               (wordFirstAxis != wordToFind && wordFirstAxisReversed != wordToFind) ||
+               (wordSecondAxis != wordToFind && wordSecondAxisReversed != wordToFind)
             )
             {
                 return false;

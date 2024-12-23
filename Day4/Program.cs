@@ -24,6 +24,10 @@
 
             Console.WriteLine($"the occurrences of the word are: {sum}");
 
+            sum = ceresSearch.XWordOcurrencesOnContent(content, "MAS");
+
+            Console.WriteLine($"the X-MAS occurrences of the word are: {sum}");
+
             Console.ReadKey();
         }
     }

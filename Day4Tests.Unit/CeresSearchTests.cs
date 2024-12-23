@@ -66,7 +66,7 @@ namespace Day4Tests.Unit
                 }
             }
 
-            string wordToFind = "mas";
+            string wordToFind = "MAS";
 
             int number = ceresSearch.XWordOcurrencesOnContent(content, wordToFind);
 
