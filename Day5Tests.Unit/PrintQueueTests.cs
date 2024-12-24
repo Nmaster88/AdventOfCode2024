@@ -155,14 +155,22 @@ namespace Day5Tests.Unit
                 .GroupBy(parts => parts[0], parts => parts[1])
                 .ToDictionary(group => int.Parse(group.Key), group => group.Select(int.Parse).ToList());
 
-            int[] numberSequence = [75, 97, 47, 61, 53];
-
             PrintQueue printQueue = new PrintQueue();
-            int[] result = printQueue.NumberSequenceInvalidFixed(numberSequence, 0, pageOrderingRules);
 
-            int[] expectedResult = [97, 75, 47, 61, 53];
+            int[] numberSequenceOne = [75, 97, 47, 61, 53];
+            int[] resultOne = printQueue.NumberSequenceInvalidFixed(numberSequenceOne, 0, pageOrderingRules);
+            int[] expectedResultOne = [97, 75, 47, 61, 53];
+            Assert.Equal(expectedResultOne, resultOne);
 
-            Assert.Equivalent(expectedResult, result);
+            int[] numberSequenceTwo = [61, 13, 29];
+            int[] resultTwo = printQueue.NumberSequenceInvalidFixed(numberSequenceTwo, 0, pageOrderingRules);
+            int[] expectedResultTwo = [61, 29, 13];
+            Assert.Equal(expectedResultTwo, resultTwo);
+
+            int[] numberSequenceThree = [97, 13, 75, 29, 47];
+            int[] resultThree = printQueue.NumberSequenceInvalidFixed(numberSequenceThree, 0, pageOrderingRules);
+            int[] expectedResultThree = [97, 75, 47, 29, 13];
+            Assert.Equal(expectedResultThree, resultThree);
         }
     }
 }

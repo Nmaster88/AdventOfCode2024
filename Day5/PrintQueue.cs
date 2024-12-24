@@ -16,14 +16,13 @@ namespace Day5
                     sequenceIsValid = IsRulesForNumberSequenceValid(numbersForUpdate, i, pageOrderingRules);
                     if (sequenceIsValid is false)
                     {
-                        
                         break;
                     }
                 }
 
-                if (!sequenceIsValid)
+                if (sequenceIsValid is false)
                 {
-                    var numbersForUpdateInvalidFixed = NumberSequenceInvalidFixed(numbersForUpdate, 0, pageOrderingRules);
+                    int[] numbersForUpdateInvalidFixed = NumberSequenceInvalidFixed(numbersForUpdate, 0, pageOrderingRules);
                     calculateSum += numbersForUpdateInvalidFixed[numbersForUpdateInvalidFixed.Length / 2];
                 }
             }
@@ -84,10 +83,11 @@ namespace Day5
 
         public int[] NumberSequenceInvalidFixed(int[] numbersForUpdates, int index, Dictionary<int, List<int>> pageOrderingRules)
         {
-            int numberToCompare = numbersForUpdates[index];
-            bool retry = false;
+            int lastIndex = numbersForUpdates.Length - 1;
 
-            if (index < numbersForUpdates.Length - 1)
+            int numberToCompare = numbersForUpdates[index];
+
+            if (index < lastIndex)
             {
                 List<int> numberThatNeedToBeAfter = new List<int>();
                 if (pageOrderingRules.TryGetValue(numberToCompare, out var valuesRetrieved))
@@ -105,14 +105,15 @@ namespace Day5
                     }
                     numbersForUpdates[i] = numberToCompare;
                     numbersForUpdates[i-1] = numberAfter;
-                    retry = true;
                 }
             }
 
-            if (retry)
+            if (index == lastIndex)
             {
-                numbersForUpdates = NumberSequenceInvalidFixed(numbersForUpdates, index, pageOrderingRules);
+                return numbersForUpdates;
             }
+
+            numbersForUpdates = NumberSequenceInvalidFixed(numbersForUpdates, ++index, pageOrderingRules);
 
             return numbersForUpdates;
         }
