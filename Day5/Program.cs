@@ -25,9 +25,9 @@
 
             Console.WriteLine($"The sum of the print queue is : {calculateSum}");
 
-            calculateSum = printQueue.CheckEachIncorrectlyOrderPageNumbersToUpdateAndCalculateSum(pageOrderingRules, pageNumbersForUpdate);
+            int calculateSumIncorrectlyOrdered = printQueue.CheckEachIncorrectlyOrderPageNumbersToUpdateAndCalculateSum(pageOrderingRules, pageNumbersForUpdate);
 
-            Console.WriteLine($"The sum of incorrect sequences of the print queue is : {calculateSum}");
+            Console.WriteLine($"The sum of incorrect sequences of the print queue is : {calculateSumIncorrectlyOrdered}");
 
             Console.ReadLine();
         }

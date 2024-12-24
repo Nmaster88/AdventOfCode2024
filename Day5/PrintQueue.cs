@@ -9,7 +9,7 @@ namespace Day5
 
             foreach (int[] numbersForUpdate in pageNumbersForUpdate)
             {
-                bool sequenceIsValid = false;
+                bool sequenceIsValid = true;
                 for (int i = 0; i < numbersForUpdate.Length; i++)
                 {
                     var numberToCheck = numbersForUpdate[i];
@@ -107,9 +107,8 @@ namespace Day5
                     numbersForUpdates[i-1] = numberAfter;
                 }
             }
-
-            if (index == lastIndex)
-            {
+            else
+            { 
                 return numbersForUpdates;
             }
 
