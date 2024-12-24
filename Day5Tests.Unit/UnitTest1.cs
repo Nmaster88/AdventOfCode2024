@@ -70,8 +70,10 @@ namespace Day5Tests.Unit
             throw new NotImplementedException();
         }
 
-        private bool CheckRules(string[] numberForUpdate, List<string[]> pageOrderingRules)
+        private bool CheckRules(string[] numberForUpdates, int index, List<string[]> pageOrderingRules)
         {
+            
+
             return true;
         }
     }
