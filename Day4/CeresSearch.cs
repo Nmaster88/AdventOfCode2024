@@ -9,7 +9,7 @@ namespace Day4
         private string wordToFind = string.Empty;
         private record Coordinates(int X, int Y);
         private static readonly (int dx, int dy)[] AllDirections =
-{
+        {
             (0, 1),   // Up
             (1, 1),   // Up-Right
             (1, 0),   // Right
