@@ -9,7 +9,10 @@ namespace Day6
             public int Y { get; set; }
         }
 
-        private Coordinates _guardStartCoordinates;
+        public class GuardMovement : Coordinates 
+        { 
+            public bool Rotated { get; set; }
+        }
 
         /// <summary>
         /// Part II
@@ -21,12 +24,12 @@ namespace Day6
             List<Coordinates> obstructionsCoordinates = new List<Coordinates>();
             ObstructionsCoordinatesMapping(mapMatrix, obstructionsCoordinates);
 
-            Coordinates guardCoordinates = new Coordinates();
+            GuardMovement guardCoordinates = new GuardMovement();
             GuardStartCoordinatesMapping(mapMatrix, guardCoordinates);
 
-            _guardStartCoordinates = new Coordinates();
-            _guardStartCoordinates.X = guardCoordinates.X;
-            _guardStartCoordinates.Y = guardCoordinates.Y;
+            //Coordinates guardStartCoordinates = new Coordinates();
+            //guardStartCoordinates.X = guardCoordinates.X;
+            //guardStartCoordinates.Y = guardCoordinates.Y;
 
             List<Coordinates> distinctObstructionForInfiniteLoops = new List<Coordinates>();
             bool guardIsOnMap = true;
@@ -41,18 +44,10 @@ namespace Day6
             return distinctExtraObstructionsOnMap;
         }
 
-        private bool GuardMovementOnMap(char[,] mapMatrix, Coordinates guardCoordinates, List<Coordinates> obstructionsCoordinates, List<Coordinates> distinctObstructionForInfiniteLoops)
+        private bool GuardMovementOnMap(char[,] mapMatrix, GuardMovement guardCoordinates, List<Coordinates> obstructionsCoordinates, List<Coordinates> distinctObstructionForInfiniteLoops)
         {
             char guardFacing = mapMatrix[guardCoordinates.X, guardCoordinates.Y];
-
-            (int, int) movementDirection = guardFacing switch
-            {
-                '^' => (0, 1),
-                '>' => (1, 0),
-                'v' => (0, -1),
-                '<' => (-1, 0),
-                _ => (0, 0)
-            };
+            (int, int) movementDirection = GuardMovementDirection(guardFacing);
 
             int horizontalMapStart = 0;
             int horizontalMapEnding = mapMatrix.GetLength(0) - 1;
@@ -60,32 +55,40 @@ namespace Day6
             int verticalMapStart = 0;
             int verticalMapEnding = mapMatrix.GetLength(1) - 1;
 
-            int horizontalGuardNextMovement = guardCoordinates.X + movementDirection.Item1;
-            int verticalGuardNextMovement = guardCoordinates.Y + movementDirection.Item2;
+            GuardMovement guardNextMovement = new GuardMovement();
+            guardNextMovement.X = guardCoordinates.X + movementDirection.Item1;
+            guardNextMovement.Y = guardCoordinates.Y + movementDirection.Item2;
 
             if (
-                horizontalGuardNextMovement < horizontalMapStart ||
-                horizontalGuardNextMovement > horizontalMapEnding ||
-                verticalGuardNextMovement < verticalMapStart ||
-                verticalGuardNextMovement > verticalMapEnding
+                guardNextMovement.X < horizontalMapStart ||
+                guardNextMovement.X > horizontalMapEnding ||
+                guardNextMovement.Y < verticalMapStart ||
+                guardNextMovement.Y > verticalMapEnding
                 )
             {
-                //mapMatrix[guardCoordinates.X, guardCoordinates.Y] = 'X';
+                var trailingMovement = guardFacing switch
+                {
+                    '^' => '|',
+                    '>' => '-',
+                    'v' => '|',
+                    '<' => '-',
+                    _ => guardFacing
+                };
+
+                mapMatrix[guardCoordinates.X, guardCoordinates.Y] = trailingMovement;
                 return false;
             }
 
-            var obstrutionForTheMovement = obstructionsCoordinates.FirstOrDefault(oc => oc.X == horizontalGuardNextMovement && oc.Y == verticalGuardNextMovement);
+            var obstrutionForTheMovement = obstructionsCoordinates.FirstOrDefault(oc => oc.X == guardNextMovement.X && oc.Y == guardNextMovement.Y);
             if (obstrutionForTheMovement is Coordinates)
             {
-                //guard remains on the same coordinate, but rotate it's direction 90 degrees to the right.
-                mapMatrix[guardCoordinates.X, guardCoordinates.Y] = guardFacing switch
-                {
-                    '^' => '>',
-                    '>' => 'v',
-                    'v' => '<',
-                    '<' => '^',
-                    _ => guardFacing
-                };
+                GuardRotating(mapMatrix, guardCoordinates);
+            }
+            else if (guardCoordinates.Rotated)
+            {
+                UpdateMapTrailingMovement(mapMatrix, guardCoordinates, '+');
+                UpdateGuardMovement(guardCoordinates, guardNextMovement);
+                UpdateMapTrailingMovement(mapMatrix, guardNextMovement, guardFacing);
             }
             else
             {
@@ -98,13 +101,59 @@ namespace Day6
                     _ => guardFacing
                 };
 
-                mapMatrix[guardCoordinates.X, guardCoordinates.Y] = trailingMovement;
-                guardCoordinates.X = horizontalGuardNextMovement;
-                guardCoordinates.Y = verticalGuardNextMovement;
-                mapMatrix[guardCoordinates.X, guardCoordinates.Y] = guardFacing;
+                UpdateMapTrailingMovement(mapMatrix, guardCoordinates, trailingMovement);
+                UpdateGuardMovement(guardCoordinates, guardNextMovement);
+                UpdateMapTrailingMovement(mapMatrix, guardNextMovement, guardFacing);
             }
 
             return true;
+        }
+
+        private static void UpdateGuardMovement(GuardMovement guardCoordinates, GuardMovement guardNextMovement)
+        {
+            guardCoordinates.X = guardNextMovement.X;
+            guardCoordinates.Y = guardNextMovement.Y;
+        }
+
+        private static void UpdateMapTrailingMovement(
+            char[,] mapMatrix, 
+            //GuardMovement guardCoordinates,  
+            Coordinates coordinates,
+            char cellUpdate
+            )
+        {
+            //mapMatrix[guardCoordinates.X, guardCoordinates.Y] = '+';
+            //guardCoordinates.X = guardNextMovement.X;
+            //guardCoordinates.Y = guardNextMovement.Y;
+            mapMatrix[coordinates.X, coordinates.Y] = cellUpdate;
+        }
+
+        private static void GuardRotating(char[,] mapMatrix, GuardMovement guardCoordinates)
+        {
+            char guardFacing = mapMatrix[guardCoordinates.X, guardCoordinates.Y];
+            //guard remains on the same coordinate, but rotate it's direction 90 degrees to the right.
+            mapMatrix[guardCoordinates.X, guardCoordinates.Y] = guardFacing switch
+            {
+                '^' => '>',
+                '>' => 'v',
+                'v' => '<',
+                '<' => '^',
+                _ => guardFacing
+            };
+
+            guardCoordinates.Rotated = true;
+        }
+
+        private static (int, int) GuardMovementDirection(char guardFacing)
+        {
+            return guardFacing switch
+            {
+                '^' => (0, 1),
+                '>' => (1, 0),
+                'v' => (0, -1),
+                '<' => (-1, 0),
+                _ => (0, 0)
+            };
         }
 
         /// <summary>
