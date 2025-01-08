@@ -27,11 +27,29 @@ namespace Day6
             GuardMovement guardCoordinates = new GuardMovement();
             GuardStartCoordinatesMapping(mapMatrix, guardCoordinates);
 
+            int horizontalMapStart = 0;
+            int horizontalMapEnding = mapMatrix.GetLength(0) - 1;
+            int verticalMapStart = 0;
+            int verticalMapEnding = mapMatrix.GetLength(1) - 1;
+
             List<Coordinates> distinctObstructionForInfiniteLoops = new List<Coordinates>();
             bool guardIsOnMap = true;
             while (guardIsOnMap)
             {
                 guardIsOnMap = GuardMovementOnMap(mapMatrix, guardCoordinates, obstructionsCoordinates, distinctObstructionForInfiniteLoops);
+                int[,] directions = new int[,] 
+                { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+                for (int i = 0; i < directions.GetLength(0); i++)
+                {
+                    int newX = guardCoordinates.X + directions[i, 0];
+                    int newY = guardCoordinates.Y + directions[i, 1];
+                    if (newX >= horizontalMapStart && newX <= horizontalMapEnding &&
+                        newY >= verticalMapStart && newY <= verticalMapEnding)
+                    {
+                        char adjacentMovement = mapMatrix[newX, newY];
+
+                    }
+                }
             }
 
             int distinctExtraObstructionsOnMap = 6;
@@ -61,15 +79,7 @@ namespace Day6
                 guardNextMovement.Y > verticalMapEnding
                 )
             {
-                var trailingMovement = guardFacing switch
-                {
-                    '^' => '|',
-                    '>' => '-',
-                    'v' => '|',
-                    '<' => '-',
-                    _ => guardFacing
-                };
-
+                var trailingMovement = GetTrailingMovement(guardFacing);
                 mapMatrix[guardCoordinates.X, guardCoordinates.Y] = trailingMovement;
                 return false;
             }
@@ -87,14 +97,7 @@ namespace Day6
             }
             else
             {
-                var trailingMovement = guardFacing switch
-                {
-                    '^' => '|',
-                    '>' => '-',
-                    'v' => '|',
-                    '<' => '-',
-                    _ => guardFacing
-                };
+                char trailingMovement = GetTrailingMovement(guardFacing);
 
                 UpdateMapTrailingMovement(mapMatrix, guardCoordinates, trailingMovement);
                 UpdateGuardMovement(guardCoordinates, guardNextMovement);
@@ -102,6 +105,18 @@ namespace Day6
             }
 
             return true;
+        }
+
+        private static char GetTrailingMovement(char guardFacing)
+        {
+            return guardFacing switch
+            {
+                '^' => '|',
+                '>' => '-',
+                'v' => '|',
+                '<' => '-',
+                _ => guardFacing
+            };
         }
 
         private static void UpdateGuardMovement(GuardMovement guardCoordinates, GuardMovement guardNextMovement)
