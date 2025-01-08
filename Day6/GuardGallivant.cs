@@ -27,10 +27,6 @@ namespace Day6
             GuardMovement guardCoordinates = new GuardMovement();
             GuardStartCoordinatesMapping(mapMatrix, guardCoordinates);
 
-            //Coordinates guardStartCoordinates = new Coordinates();
-            //guardStartCoordinates.X = guardCoordinates.X;
-            //guardStartCoordinates.Y = guardCoordinates.Y;
-
             List<Coordinates> distinctObstructionForInfiniteLoops = new List<Coordinates>();
             bool guardIsOnMap = true;
             while (guardIsOnMap)
@@ -38,7 +34,6 @@ namespace Day6
                 guardIsOnMap = GuardMovementOnMap(mapMatrix, guardCoordinates, obstructionsCoordinates, distinctObstructionForInfiniteLoops);
             }
 
-            //TODO
             int distinctExtraObstructionsOnMap = 6;
 
             return distinctExtraObstructionsOnMap;
@@ -86,9 +81,9 @@ namespace Day6
             }
             else if (guardCoordinates.Rotated)
             {
+                UpdateMapTrailingMovement(mapMatrix, guardNextMovement, guardFacing);
                 UpdateMapTrailingMovement(mapMatrix, guardCoordinates, '+');
                 UpdateGuardMovement(guardCoordinates, guardNextMovement);
-                UpdateMapTrailingMovement(mapMatrix, guardNextMovement, guardFacing);
             }
             else
             {
@@ -116,15 +111,11 @@ namespace Day6
         }
 
         private static void UpdateMapTrailingMovement(
-            char[,] mapMatrix, 
-            //GuardMovement guardCoordinates,  
+            char[,] mapMatrix,  
             Coordinates coordinates,
             char cellUpdate
             )
         {
-            //mapMatrix[guardCoordinates.X, guardCoordinates.Y] = '+';
-            //guardCoordinates.X = guardNextMovement.X;
-            //guardCoordinates.Y = guardNextMovement.Y;
             mapMatrix[coordinates.X, coordinates.Y] = cellUpdate;
         }
 
