@@ -67,7 +67,18 @@ namespace Day6
 
         private bool CheckForMovementLoop(char[,] mapMatrix, CellMovement currentCell, CellMovement nextCell)
         {
-            
+            if ((currentCell.Content is not '|' || currentCell.Content is not '-') && (nextCell.Content is not '|' || nextCell.Content is not '-'))
+            {
+                return false;
+            }
+
+            int horizontalMapStart = 0;
+            int horizontalMapEnding = mapMatrix.GetLength(0) - 1;
+            int verticalMapStart = 0;
+            int verticalMapEnding = mapMatrix.GetLength(1) - 1;
+
+
+
             return true;
         }
 
@@ -79,8 +90,7 @@ namespace Day6
             int verticalMapStart = 0;
             int verticalMapEnding = mapMatrix.GetLength(1) - 1;
 
-            int[,] directions = new int[,]
-            { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+            int[,] directions = GetDirections();
             for (int i = 0; i < directions.GetLength(0); i++)
             {
                 int newX = guardCoordinates.X + directions[i, 0];
@@ -100,6 +110,12 @@ namespace Day6
             }
 
             return adjacentCellsMovement;
+        }
+
+        private static int[,] GetDirections()
+        {
+            return new int[,]
+            { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
         }
 
         private bool GuardMovementOnMap(char[,] mapMatrix, Guard guardCoordinates, List<Coordinates> obstructionsCoordinates, List<Coordinates> distinctObstructionForInfiniteLoops)
