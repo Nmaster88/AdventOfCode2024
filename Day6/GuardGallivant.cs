@@ -143,7 +143,6 @@ namespace Day6
             else
             {
                 char trailingMovement = GetTrailingMovement(guardFacing);
-
                 UpdateMapTrailingMovement(mapMatrix, guardCoordinates, trailingMovement);
                 UpdateGuardMovement(guardCoordinates, guardNextMovement);
                 UpdateMapTrailingMovement(mapMatrix, guardNextMovement, guardFacing);
@@ -168,6 +167,8 @@ namespace Day6
         {
             guardCoordinates.X = guardNextMovement.X;
             guardCoordinates.Y = guardNextMovement.Y;
+            guardCoordinates.Rotated = false;
+
         }
 
         private static void UpdateMapTrailingMovement(
