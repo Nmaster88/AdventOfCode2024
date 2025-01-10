@@ -20,7 +20,7 @@
                 }
             }
 
-            GuardGallivant guardGallivant = new GuardGallivant();
+            GuardGallivant guardGallivant = new GuardGallivant(mapMatrix);
             int distinctPositions = guardGallivant.IterateGuardPatrolAndReturnDistinctPositions(mapMatrix);
 
             Console.WriteLine($"The total of distinct positions is : {distinctPositions}");

@@ -70,7 +70,7 @@ namespace Day6Tests.Unit
                 }
             }
 
-            GuardGallivant guardGallivant = new GuardGallivant();
+            GuardGallivant guardGallivant = new GuardGallivant(mapMatrix);
             int distinctPositions = guardGallivant.IterateGuardPatrolAndReturnDistinctExtraObstructionsForLoopStuck(mapMatrix);
 
             Assert.Equal(6, distinctPositions);

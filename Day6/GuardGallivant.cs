@@ -1,30 +1,21 @@
-﻿
-
-namespace Day6
+﻿namespace Day6
 {
     public class GuardGallivant
     {
-        public class Coordinates
+        public int HorizontalMapStart { get; init; }
+        public int VerticalMapStart { get; init; }
+        public int HorizontalMapEnding { get; init; }
+        public int VerticalMapEnding { get; init; }
+
+        public GuardGallivant(char[,] mapMatrix)
         {
-            public int X { get; set; }
-            public int Y { get; set; }
+            HorizontalMapStart = 0;
+            HorizontalMapEnding = mapMatrix.GetLength(0) - 1;
+            VerticalMapStart = 0;
+            VerticalMapEnding = mapMatrix.GetLength(1) - 1;
         }
 
-        public class Cell : Coordinates
-        {
-            public char Content { get; set; }
-        }
-
-        public class CellMovement : Cell
-        {
-            public int xMultiplier { get; set; }
-            public int yMultiplier { get; set; }
-        }
-
-        public class Guard : Cell
-        { 
-            public bool Rotated { get; set; }
-        }
+        public GuardGallivant() { }
 
         /// <summary>
         /// Part II
@@ -51,10 +42,16 @@ namespace Day6
                 {
                     var currentCell = adjacentCells[i];
                     var nextCell = adjacentCells[(i + 1) % adjacentCells.Count];
-                    if ((currentCell.Content == '|' || currentCell.Content == '-') &&
-                        (nextCell.Content == '|' || nextCell.Content == '-'))
+                    if ((currentCell.Content is not '|' && currentCell.Content is not '-') ||
+                        (nextCell.Content is not '|' && nextCell.Content is not '-'))
                     {
-                        bool IsLoopMovement = CheckForMovementLoop(mapMatrix, currentCell, nextCell);
+                        continue;
+                    }
+                    bool IsLoopMovement = CheckForMovementLoop(mapMatrix, currentCell, nextCell);
+
+                    if(IsLoopMovement)
+                    {
+                        Console.WriteLine("Found a loop!");
                     }
                 }
 
@@ -67,77 +64,82 @@ namespace Day6
 
         private bool CheckForMovementLoop(char[,] mapMatrix, CellMovement cellOne, CellMovement cellTwo)
         {
-            if ((cellOne.Content is not '|' || cellOne.Content is not '-') && (cellTwo.Content is not '|' || cellTwo.Content is not '-'))
+            if ((cellOne.Content is not '|' || cellOne.Content is not '-') &&
+                (cellTwo.Content is not '|' || cellTwo.Content is not '-') &&
+                (cellOne.Content == cellTwo.Content))
             {
                 return false;
             }
 
+            (bool, int, int) EvaluatePathOne = EvaluatePath(mapMatrix, cellOne, cellTwo);
+            (bool, int, int) EvaluatePathTwo = EvaluatePath(mapMatrix, cellTwo, cellOne);
+
+            if((EvaluatePathOne.Item1 is not true || EvaluatePathTwo.Item1 is not true) &&
+                (EvaluatePathOne.Item2 != EvaluatePathTwo.Item3 || (EvaluatePathTwo.Item3 != EvaluatePathOne.Item2)))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private (bool, int, int) EvaluatePath(char[,] mapMatrix, CellMovement cellOne, CellMovement cellTwo)
+        {
             char cellOneContent = cellOne.Content;
             char cellTwoContent = cellTwo.Content;
             int incrementCellOne = 0;
             int incrementCellTwo = 0;
 
-            int horizontalMapStart = 0;
-            int horizontalMapEnding = mapMatrix.GetLength(0) - 1;
-            int verticalMapStart = 0;
-            int verticalMapEnding = mapMatrix.GetLength(1) - 1;
-
-            while(cellOne.Content != '+' && cellOne.Content == cellOneContent)
+            while (cellOne.Content != '+' && cellOne.Content == cellOneContent)
             {
                 int newX = cellOne.X + cellOne.xMultiplier;
                 int newY = cellOne.Y + cellOne.yMultiplier;
-                if (newX >= horizontalMapStart && newX <= horizontalMapEnding &&
-                    newY >= verticalMapStart && newY <= verticalMapEnding)
+                if (newX >= HorizontalMapStart && newX <= HorizontalMapEnding &&
+                    newY >= VerticalMapStart && newY <= VerticalMapEnding)
                 {
                     cellOne.Content = mapMatrix[newX, newY];
                     cellOne.X = newX;
                     cellOne.Y = newY;
                     ++incrementCellOne;
                 }
-
-                if(cellOne.Content == '+')
-                {
-
-                }
             }
-
-            while (cellTwo.Content != '+' && cellTwo.Content == cellOneContent)
+            if (cellOne.Content != '+')
             {
-                int newX = cellTwo.X + cellTwo.xMultiplier;
-                int newY = cellTwo.Y + cellTwo.yMultiplier;
-                if (newX >= horizontalMapStart && newX <= horizontalMapEnding &&
-                    newY >= verticalMapStart && newY <= verticalMapEnding)
+                return (false, incrementCellOne, 0);
+            }
+            do
+            {
+                int newX = cellOne.X + cellTwo.xMultiplier;
+                int newY = cellOne.Y + cellTwo.yMultiplier;
+                if (newX >= HorizontalMapStart && newX <= HorizontalMapEnding &&
+                    newY >= VerticalMapStart && newY <= VerticalMapEnding)
                 {
-                    cellTwo.Content = mapMatrix[newX, newY];
-                    cellTwo.X = newX;
-                    cellTwo.Y = newY;
+                    cellOne.Content = mapMatrix[newX, newY];
+                    cellOne.X = newX;
+                    cellOne.Y = newY;
                     ++incrementCellTwo;
                 }
-
-                if (cellTwo.Content == '+')
-                {
-
-                }
+            }
+            while (cellOne.Content != '+' && cellOne.Content == cellTwoContent);
+            if (cellOne.Content != '+')
+            {
+                return (false, incrementCellOne, incrementCellTwo);
             }
 
-            return true;
+            return (true, incrementCellOne, incrementCellTwo);
         }
 
-        private static List<CellMovement> GetAdjacentMovementCells(char[,] mapMatrix, Guard guardCoordinates)
+        private List<CellMovement> GetAdjacentMovementCells(char[,] mapMatrix, Guard guardCoordinates)
         {
             List<CellMovement> adjacentCellsMovement = new List<CellMovement>();
-            int horizontalMapStart = 0;
-            int horizontalMapEnding = mapMatrix.GetLength(0) - 1;
-            int verticalMapStart = 0;
-            int verticalMapEnding = mapMatrix.GetLength(1) - 1;
 
             int[,] directions = GetDirections();
             for (int i = 0; i < directions.GetLength(0); i++)
             {
                 int newX = guardCoordinates.X + directions[i, 0];
                 int newY = guardCoordinates.Y + directions[i, 1];
-                if (newX >= horizontalMapStart && newX <= horizontalMapEnding &&
-                    newY >= verticalMapStart && newY <= verticalMapEnding)
+                if (newX >= HorizontalMapStart && newX <= HorizontalMapEnding &&
+                    newY >= VerticalMapStart && newY <= VerticalMapEnding)
                 {
                     CellMovement adjacentCellMovement = new CellMovement();
                     adjacentCellMovement.X = newX;
@@ -164,21 +166,15 @@ namespace Day6
             char guardFacing = mapMatrix[guardCoordinates.X, guardCoordinates.Y];
             (int, int) movementDirection = GuardMovementDirection(guardFacing);
 
-            int horizontalMapStart = 0;
-            int horizontalMapEnding = mapMatrix.GetLength(0) - 1;
-
-            int verticalMapStart = 0;
-            int verticalMapEnding = mapMatrix.GetLength(1) - 1;
-
             Guard guardNextMovement = new Guard();
             guardNextMovement.X = guardCoordinates.X + movementDirection.Item1;
             guardNextMovement.Y = guardCoordinates.Y + movementDirection.Item2;
 
             if (
-                guardNextMovement.X < horizontalMapStart ||
-                guardNextMovement.X > horizontalMapEnding ||
-                guardNextMovement.Y < verticalMapStart ||
-                guardNextMovement.Y > verticalMapEnding
+                guardNextMovement.X < HorizontalMapStart ||
+                guardNextMovement.X > HorizontalMapEnding ||
+                guardNextMovement.Y < VerticalMapStart ||
+                guardNextMovement.Y > VerticalMapEnding
                 )
             {
                 var trailingMovement = GetTrailingMovement(guardFacing);
@@ -220,15 +216,14 @@ namespace Day6
             };
         }
 
-        private static void UpdateGuardMovement(Guard guardCoordinates, Guard guardNextMovement)
+        private void UpdateGuardMovement(Guard guardCoordinates, Coordinates nextMovement)
         {
-            guardCoordinates.X = guardNextMovement.X;
-            guardCoordinates.Y = guardNextMovement.Y;
+            guardCoordinates.X = nextMovement.X;
+            guardCoordinates.Y = nextMovement.Y;
             guardCoordinates.Rotated = false;
-
         }
 
-        private static void UpdateMapTrailingMovement(
+        private void UpdateMapTrailingMovement(
             char[,] mapMatrix,  
             Coordinates coordinates,
             char cellUpdate
@@ -237,7 +232,7 @@ namespace Day6
             mapMatrix[coordinates.X, coordinates.Y] = cellUpdate;
         }
 
-        private static void GuardRotating(char[,] mapMatrix, Guard guardCoordinates)
+        private void GuardRotating(char[,] mapMatrix, Guard guardCoordinates)
         {
             char guardFacing = mapMatrix[guardCoordinates.X, guardCoordinates.Y];
             //guard remains on the same coordinate, but rotate it's direction 90 degrees to the right.
@@ -374,7 +369,6 @@ namespace Day6
 
             return true;
         }
-
 
         private int DistinctPositionsOnMap(char[,] mapMatrix)
         {
