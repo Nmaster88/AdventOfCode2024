@@ -65,19 +65,60 @@ namespace Day6
             return distinctExtraObstructionsOnMap;
         }
 
-        private bool CheckForMovementLoop(char[,] mapMatrix, CellMovement currentCell, CellMovement nextCell)
+        private bool CheckForMovementLoop(char[,] mapMatrix, CellMovement cellOne, CellMovement cellTwo)
         {
-            if ((currentCell.Content is not '|' || currentCell.Content is not '-') && (nextCell.Content is not '|' || nextCell.Content is not '-'))
+            if ((cellOne.Content is not '|' || cellOne.Content is not '-') && (cellTwo.Content is not '|' || cellTwo.Content is not '-'))
             {
                 return false;
             }
+
+            char cellOneContent = cellOne.Content;
+            char cellTwoContent = cellTwo.Content;
+            int incrementCellOne = 0;
+            int incrementCellTwo = 0;
 
             int horizontalMapStart = 0;
             int horizontalMapEnding = mapMatrix.GetLength(0) - 1;
             int verticalMapStart = 0;
             int verticalMapEnding = mapMatrix.GetLength(1) - 1;
 
+            while(cellOne.Content != '+' && cellOne.Content == cellOneContent)
+            {
+                int newX = cellOne.X + cellOne.xMultiplier;
+                int newY = cellOne.Y + cellOne.yMultiplier;
+                if (newX >= horizontalMapStart && newX <= horizontalMapEnding &&
+                    newY >= verticalMapStart && newY <= verticalMapEnding)
+                {
+                    cellOne.Content = mapMatrix[newX, newY];
+                    cellOne.X = newX;
+                    cellOne.Y = newY;
+                    ++incrementCellOne;
+                }
 
+                if(cellOne.Content == '+')
+                {
+
+                }
+            }
+
+            while (cellTwo.Content != '+' && cellTwo.Content == cellOneContent)
+            {
+                int newX = cellTwo.X + cellTwo.xMultiplier;
+                int newY = cellTwo.Y + cellTwo.yMultiplier;
+                if (newX >= horizontalMapStart && newX <= horizontalMapEnding &&
+                    newY >= verticalMapStart && newY <= verticalMapEnding)
+                {
+                    cellTwo.Content = mapMatrix[newX, newY];
+                    cellTwo.X = newX;
+                    cellTwo.Y = newY;
+                    ++incrementCellTwo;
+                }
+
+                if (cellTwo.Content == '+')
+                {
+
+                }
+            }
 
             return true;
         }
