@@ -34,7 +34,7 @@
             bool guardIsOnMap = true;
             while (guardIsOnMap)
             {
-                guardIsOnMap = GuardMovementOnMap(mapMatrix, guardCoordinates, obstructionsCoordinates, distinctObstructionForInfiniteLoops);
+                guardIsOnMap = GuardMovementOnMap(mapMatrix, guardCoordinates, obstructionsCoordinates);
 
                 List<CellMovement> adjacentCells = GetAdjacentMovementCells(mapMatrix, guardCoordinates);
 
@@ -51,15 +51,22 @@
 
                     if(IsLoopMovement)
                     {
+                        (int, int) movementDirection = GuardMovementDirection(guardCoordinates.Content);
+
+                        Coordinates obstruction = new Coordinates();
+                        obstruction.X = guardCoordinates.X + movementDirection.Item1;
+                        obstruction.Y = guardCoordinates.Y + movementDirection.Item2;
+
+                        distinctObstructionForInfiniteLoops.Add(obstruction);
                         Console.WriteLine("Found a loop!");
                     }
                 }
 
             }
 
-            int distinctExtraObstructionsOnMap = 6;
-
-            return distinctExtraObstructionsOnMap;
+            //int distinctExtraObstructionsOnMap = 6;
+            //return distinctExtraObstructionsOnMap;
+            return distinctObstructionForInfiniteLoops.Count;
         }
 
         private bool CheckForMovementLoop(char[,] mapMatrix, CellMovement cellOne, CellMovement cellTwo)
@@ -161,12 +168,12 @@
             { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
         }
 
-        private bool GuardMovementOnMap(char[,] mapMatrix, Guard guardCoordinates, List<Coordinates> obstructionsCoordinates, List<Coordinates> distinctObstructionForInfiniteLoops)
+        private bool GuardMovementOnMap(char[,] mapMatrix, Guard guardCoordinates, List<Coordinates> obstructionsCoordinates)
         {
             char guardFacing = mapMatrix[guardCoordinates.X, guardCoordinates.Y];
             (int, int) movementDirection = GuardMovementDirection(guardFacing);
 
-            Guard guardNextMovement = new Guard();
+            Coordinates guardNextMovement = new Coordinates();
             guardNextMovement.X = guardCoordinates.X + movementDirection.Item1;
             guardNextMovement.Y = guardCoordinates.Y + movementDirection.Item2;
 
@@ -223,11 +230,7 @@
             guardCoordinates.Rotated = false;
         }
 
-        private void UpdateMapTrailingMovement(
-            char[,] mapMatrix,  
-            Coordinates coordinates,
-            char cellUpdate
-            )
+        private void UpdateMapTrailingMovement(char[,] mapMatrix,  Coordinates coordinates, char cellUpdate)
         {
             mapMatrix[coordinates.X, coordinates.Y] = cellUpdate;
         }
